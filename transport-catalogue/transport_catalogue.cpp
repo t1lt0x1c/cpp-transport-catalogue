@@ -19,7 +19,7 @@ size_t StopToStopHasher::operator()(const pair<const Stop*, const Stop*> stops) 
     return hasher_(stops.first) + hasher_(stops.second) * 37;
 }
 
-void TransportCatalogue::AddDistance(string_view stop1, std::string_view stop2, int distance) {
+void TransportCatalogue::AddDistance(std::string_view stop1, std::string_view stop2, int distance) {
     auto stop1_ = FindStop(stop1);
     auto stop2_ = FindStop(stop2);
     length_table[{stop1_, stop2_}] = distance;
