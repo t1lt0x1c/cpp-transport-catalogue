@@ -63,7 +63,7 @@ namespace TrCatalogue {
             Stop* FindStop(std::string_view stop);
             Stop* EditStop(std::string_view stop);
             void AddBus(std::string& bus, std::vector<std::string>& stops);
-            void AddDistance(string_view, std::string_view, int);
+            void AddDistance(std::string_view, std::string_view, int);
             Bus* FindBus(std::string& bus);
             int DistanceStopToStop(Stop* stop1, Stop* stop2);
             BusInfo GetInfoBus(std::string name);
