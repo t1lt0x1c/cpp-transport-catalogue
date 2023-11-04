@@ -59,15 +59,15 @@ namespace TrCatalogue {
 
         class TransportCatalogue {
         public:
-            void AddStop(std::string name, Coordinates coord);
+            void AddStop(const std::string& name, Coordinates coord);
             Stop* FindStop(std::string_view stop);
             Stop* EditStop(std::string_view stop);
-            void AddBus(std::string& bus, std::vector<std::string>& stops);
+            void AddBus(const std::string& bus, const std::vector<std::string>& stops);
             void AddDistance(std::string_view, std::string_view, int);
-            Bus* FindBus(std::string& bus);
+            Bus* FindBus(const std::string& bus);
             int DistanceStopToStop(Stop* stop1, Stop* stop2);
-            BusInfo GetInfoBus(std::string name);
-            StopInfo GetInfoStop(std::string name);
+            BusInfo GetInfoBus(const std::string& name);
+            StopInfo GetInfoStop(const std::string& name);
         private:
             std::deque<Stop> stops;
             std::deque<Bus> buses;

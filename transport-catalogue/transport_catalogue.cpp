@@ -25,7 +25,7 @@ void TransportCatalogue::AddDistance(std::string_view stop1, std::string_view st
     length_table[{stop1_, stop2_}] = distance;
 }
 
-void TransportCatalogue::AddStop(const std::string name, Coordinates coord) {
+void TransportCatalogue::AddStop(const std::string& name, Coordinates coord) {
     stops.push_back({ name, {coord.lat, coord.lng}, {} });
     stopname_to_stop[stops.back().name] = &(stops.back());
 }
@@ -47,7 +47,7 @@ void TransportCatalogue::AddBus(const string& bus, const vector<string>& stops_)
     busname_to_bus[buses.back().name] = &(buses.back());
 }
 
-Bus* TransportCatalogue::FindBus(string& bus) {
+Bus* TransportCatalogue::FindBus(const string& bus) {
     return busname_to_bus.at(bus);
 }
 
@@ -62,7 +62,7 @@ int TransportCatalogue::DistanceStopToStop(Stop* stop1, Stop* stop2) {
     }
 }
 
-BusInfo TransportCatalogue::GetInfoBus(const string name) {
+BusInfo TransportCatalogue::GetInfoBus(const std::string& name) {
     if (busname_to_bus.count(name)) {
         const Bus& bus = *(busname_to_bus.at(name));
         double geo_distance = 0;
@@ -83,7 +83,7 @@ BusInfo TransportCatalogue::GetInfoBus(const string name) {
     }
 }
 
-StopInfo TransportCatalogue::GetInfoStop(const string name) {
+StopInfo TransportCatalogue::GetInfoStop(const std::string& name) {
     if (stopname_to_stop.count(name)) {
         const Stop& stop = *(stopname_to_stop.at(name));
         return { stop.name, stop.buses };

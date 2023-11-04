@@ -17,7 +17,7 @@ pair<string_view, int> MToStop(string_view text) {
     return { stop, distance };
 }
 
-void InputReader::AddRequest(const string text, std::ostream& out) {
+void InputReader::AddRequest(const string& text, std::ostream& out) {
     auto it = text.find(' ');
     auto it_ = text.find_first_not_of(' ', it);
     string request = text.substr(it_);
@@ -40,7 +40,6 @@ void InputReader::SendRequestsStops(TrCatalogue::DataBase::TransportCatalogue& c
         auto it_beginlat = text.find_first_not_of(' ', ++it_endname);
         auto it_endlat = text.find(',', it_beginlat);
         double lat = stod(string(text.substr(it_beginlat, it_endlat - it_beginlat)));
-        //lat = round(lat * 100)/100;
         auto it_beginlong = text.find_first_not_of(' ', ++it_endlat);
         if (text.find(',', it_beginlong) != string::npos) {
             auto it_endlong = text.find(',', it_beginlong);
@@ -57,7 +56,6 @@ void InputReader::SendRequestsStops(TrCatalogue::DataBase::TransportCatalogue& c
         } else {
             auto it_endlong = text.find_last_not_of(' ');
             double lng = stod(string(text.substr(it_beginlong, it_endlong - it_beginlong + 1)));
-            //lng = round(lng * 100)/100;
             catalogue.AddStop(string(name), { lat, lng });
         }
     }
