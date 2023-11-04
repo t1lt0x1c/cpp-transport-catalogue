@@ -16,13 +16,14 @@ using namespace TrCatalogue::OutPut;
 int main() {
     InputReader inp;
     TransportCatalogue tr;
-    Stat_Reader out;
+    StatReader out;
     string line;
+    std::ostream error_requests;
     getline(cin, line);
     int n = stoi(line);
     for (int i = 0; i < n; i++) {
         getline(cin, line);
-        inp.AddRequest(line);
+        inp.AddRequest(line, std::ostream& error_requests);
     }
     inp.SendRequestsStops(tr);
     inp.SendRequestsBuses(tr);
@@ -31,7 +32,7 @@ int main() {
     n = stoi(line);
     for (int i = 0; i < n; i++) {
         getline(cin, line);
-        out.AddRequest(line);
+        out.AddRequest(line, std::ostream& error_requests);
     }
     out.GetOutPut(tr);
 }

@@ -12,7 +12,7 @@ namespace TrCatalogue {
             STOP,
         };
 
-        class Stat_Reader {
+        class StatReader {
         public:
             struct StatRequest {
                 OutRequestType type;
@@ -22,7 +22,7 @@ namespace TrCatalogue {
                 }
 
             };
-            StatRequest AddRequest(std::string text);
+            StatRequest AddRequest(std::string text, std::ostream&);
             void GetInfoBus(std::string text, TrCatalogue::DataBase::TransportCatalogue& catalogue, std::ostream& out = std::cout);
             void GetInfoStop(std::string text, TrCatalogue::DataBase::TransportCatalogue& catalogue, std::ostream& out = std::cout);
             void GetOutPut(TrCatalogue::DataBase::TransportCatalogue& catalogue, std::ostream& out = std::cout);

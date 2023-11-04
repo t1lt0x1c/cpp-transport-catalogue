@@ -17,18 +17,18 @@ pair<string_view, int> MToStop(string_view text) {
     return { stop, distance };
 }
 
-void InputReader::AddRequest(string text) {
+void InputReader::AddRequest(const string text, std::ostream& out) {
     auto it = text.find(' ');
     auto it_ = text.find_first_not_of(' ', it);
-    string t = text.substr(it_);
+    string request = text.substr(it_);
     if (text[0] == 'B') {
-        buses_.push_back({ RequestType::BUS, t });
+        buses_.push_back({ RequestType::BUS, request });
     }
     else if (text[0] == 'S') {
-        stops_.push_back({ RequestType::STOP, t });
+        stops_.push_back({ RequestType::STOP, request });
     }
     else {
-        cout << "Unknown Request" << endl;
+        out << "Unknown Request" << endl;
     }
 }
 
@@ -100,6 +100,6 @@ void InputReader::SendRequestsBuses(TrCatalogue::DataBase::TransportCatalogue& c
 
 void InputReader::SendDistances(TrCatalogue::DataBase::TransportCatalogue& catalogue) {
     for (auto& d : distances) {
-        catalogue.AddDistance(d);
+        catalogue.AddDistance(d.first.first, d.first.second, d.second);
     }
 }

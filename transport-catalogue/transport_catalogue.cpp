@@ -19,13 +19,13 @@ size_t StopToStopHasher::operator()(const pair<const Stop*, const Stop*> stops) 
     return hasher_(stops.first) + hasher_(stops.second) * 37;
 }
 
-void TransportCatalogue::AddDistance(std::pair<std::pair<std::string_view, std::string_view>, int> d) {
-    auto stop1 = FindStop(d.first.first);
-    auto stop2 = FindStop(d.first.second);
-    length_table[{stop1, stop2}] = d.second;
+void TransportCatalogue::AddDistance(string_view stop1, std::string_view stop2, int distance) {
+    auto stop1_ = FindStop(stop1);
+    auto stop2_ = FindStop(stop2);
+    length_table[{stop1_, stop2_}] = distance;
 }
 
-void TransportCatalogue::AddStop(std::string name, Coordinates coord) {
+void TransportCatalogue::AddStop(const std::string name, Coordinates coord) {
     stops.push_back({ name, {coord.lat, coord.lng}, {} });
     stopname_to_stop[stops.back().name] = &(stops.back());
 }
@@ -38,7 +38,7 @@ Stop* TransportCatalogue::EditStop(std::string_view stop) {
     return stopname_to_stop[stop];
 }
 
-void TransportCatalogue::AddBus(string& bus, vector<string>& stops_) {
+void TransportCatalogue::AddBus(const string& bus, const vector<string>& stops_) {
     buses.push_back({ bus, {} });
     for (const auto& stop : stops_) {
         buses.back().stops.push_back(FindStop(stop));
@@ -62,7 +62,7 @@ int TransportCatalogue::DistanceStopToStop(Stop* stop1, Stop* stop2) {
     }
 }
 
-BusInfo TransportCatalogue::GetInfoBus(string name) {
+BusInfo TransportCatalogue::GetInfoBus(const string name) {
     if (busname_to_bus.count(name)) {
         const Bus& bus = *(busname_to_bus.at(name));
         double geo_distance = 0;
@@ -83,7 +83,7 @@ BusInfo TransportCatalogue::GetInfoBus(string name) {
     }
 }
 
-StopInfo TransportCatalogue::GetInfoStop(string name) {
+StopInfo TransportCatalogue::GetInfoStop(const string name) {
     if (stopname_to_stop.count(name)) {
         const Stop& stop = *(stopname_to_stop.at(name));
         return { stop.name, stop.buses };

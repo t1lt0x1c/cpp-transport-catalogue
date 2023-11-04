@@ -23,7 +23,7 @@ namespace TrCatalogue {
                     return (oth.type == type && oth.data == data);
                 }
             };
-            void AddRequest(std::string text);
+            void AddRequest(std::string text, std::ostream&);
             void SendRequestsBuses(TrCatalogue::DataBase::TransportCatalogue& catalogue);
             void SendRequestsStops(TrCatalogue::DataBase::TransportCatalogue& catalogue);
             void SendDistances(TrCatalogue::DataBase::TransportCatalogue& catalogue);
