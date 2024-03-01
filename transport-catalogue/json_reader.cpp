@@ -26,7 +26,8 @@ void JsonReader::OutPutAnswers(std::ostream& out) const {
 	
     json::Builder ans;
     ans.StartArray();
-
+    TransportRouter router(tr_, route_settings_);
+    
 	for (auto& request : stat_requests) {
 		auto& req = request.AsMap();
 		auto& type = req.at("type").AsString();
@@ -67,6 +68,31 @@ void JsonReader::OutPutAnswers(std::ostream& out) const {
 			svg::Document map_ = mp.RenderMap();
 			map_.Render(s);
             ans.Key("map").Value(s.str()).EndDict();
+		}
+		else if (type == "Route") {
+			ans.StartDict().Key("request_id").Value(req.at("id").AsInt());
+			
+			auto response = router.BuildRoute(req.at("from").AsString(), req.at("to").AsString());
+			if (response.has_value()) {
+				ans.Key("total_time").Value(response->total_time).Key("items").StartArray();
+				for (auto& resp : response->items) {
+					ans.StartDict();
+					if (holds_alternative<WaitResponse>(resp)) {
+						auto& resp_ = get<WaitResponse>(resp);
+						ans.Key("type").Value("Wait").Key("stop_name").Value(resp_.stop_name).Key("time").Value(resp_.time);
+					}
+					else {
+						auto& resp_ = get<BusResponse>(resp);
+						ans.Key("type").Value("Bus").Key("bus").Value(resp_.bus).Key("span_count").Value(resp_.span_count).Key("time").Value(resp_.time);
+					}
+					ans.EndDict();
+				}
+				ans.EndArray();
+			}
+			else {
+				ans.Key("error_message").Value("not found");
+			}
+			ans.EndDict();
 		}
 	}
     ans.EndArray();
@@ -180,6 +206,12 @@ void JsonReader::SetingsRender() {
 		colors.push_back(move(ColorFromNode(color)));
 	}
 	settings.color_palette = move(colors);
+}
+
+void JsonReader::SettingsRoute() {
+	auto& route_settings = doc_.GetRoot().AsMap().at("routing_settings").AsMap();
+	route_settings_.bus_velocity_ = route_settings.at("bus_velocity").AsDouble() * 1000 / 60;
+	route_settings_.bus_wait_time_ = route_settings.at("bus_wait_time").AsInt();
 }
 
 

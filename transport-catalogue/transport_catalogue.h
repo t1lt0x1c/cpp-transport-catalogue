@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 #include <deque>
 #include <vector>
 #include <unordered_map>
@@ -9,7 +10,11 @@
 #include "domain.h"
 
 namespace TrCatalogue {
-
+    struct InfoFromStopToStop {
+        double time{ 0 };
+        int stops_count{ 0 };
+    };
+    using DistancesFromStopToStop = std::unordered_map<std::pair<Stop*, Stop*>, InfoFromStopToStop, StopToStopHasher>;
     class TransportCatalogue {
     public:
         void AddStop(const std::string& name, geo::Coordinates coord);
@@ -24,6 +29,7 @@ namespace TrCatalogue {
         const std::deque<Bus>& GetBuses() const;
         const std::deque<Stop>& GetStops() const;
         geo::Coordinates GetCoord(Stop*) const;
+        DistancesFromStopToStop AllRouteBus(const std::string_view busname, double bus_velocity) const;
     private:
         std::deque<Stop> stops;
         std::deque<Bus> buses;
@@ -31,5 +37,6 @@ namespace TrCatalogue {
         std::unordered_map<std::string_view, Bus*, BusHasher> busname_to_bus;
         std::unordered_map<std::pair<Stop*, Stop*>, int, StopToStopHasher> length_table;
     };
-
+    
+    
 }

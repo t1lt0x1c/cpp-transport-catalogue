@@ -12,7 +12,7 @@ namespace TrCatalogue {
         return hasher_(bus);
     }
 
-    size_t StopToStopHasher::operator()(const pair<const Stop*, const Stop*> stops) const {
+    size_t StopToStopHasher::operator()(const std::pair<const Stop*, const Stop*> stops) const {
         return hasher_(stops.first) + hasher_(stops.second) * 37;
     }
 
@@ -98,5 +98,50 @@ namespace TrCatalogue {
 
     geo::Coordinates TransportCatalogue::GetCoord(Stop* stop) const {
         return (*stop).coord;
+    }
+    
+    
+    
+    
+    DistancesFromStopToStop TransportCatalogue::AllRouteBus(const string_view busname, double bus_velocity) const {
+        DistancesFromStopToStop distances;
+        
+        auto gettime = [this, bus_velocity](Stop* from, Stop* to) {
+            return static_cast<double>(DistanceStopToStop(from, to) / bus_velocity);
+            };
+        
+        auto addinfo = [this, &gettime, &distances](auto begin, auto end) {
+            double all_time{0};
+            std::pair<Stop*, Stop*> a_to_b;
+            InfoFromStopToStop current_info;
+            auto prev = begin;
+            
+            for(auto it = begin; it != end; it++) {
+                all_time = 0;
+                prev = it;
+                int count = 1;
+                for (auto it2 = next(it); it2 != end; ++it2) {
+                    
+                    all_time += gettime(*prev, *it2);
+                    a_to_b = std::pair{*it, *it2};
+                    current_info = InfoFromStopToStop{all_time, count++};
+                    
+                    if (distances.count(a_to_b) == 0 || distances[a_to_b].time > all_time) {
+                        distances[a_to_b] = current_info;
+                    }
+                    prev = it2;
+                }
+            }
+        };
+        
+        const auto& bus = busname_to_bus.at(busname);
+        const auto& stops = bus->stops;
+        
+        addinfo(stops.begin(), stops.end());
+        
+        if(!bus->is_round) {
+            addinfo(stops.rbegin(), stops.rend());
+        }
+        return distances;
     }
 }
