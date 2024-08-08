@@ -32,7 +32,7 @@ void InputReader::AddRequest(const string& text, std::ostream& out) {
     }
 }
 
-void InputReader::SendRequestsStops(TrCatalogue::DataBase::TransportCatalogue& catalogue) {
+void InputReader::SendRequestsStops(TrCatalogue::TransportCatalogue& catalogue) {
     for (auto& request : stops_) {
         string_view text = request.data;
         auto it_endname = text.find(':');
@@ -61,15 +61,15 @@ void InputReader::SendRequestsStops(TrCatalogue::DataBase::TransportCatalogue& c
     }
 }
 
-void InputReader::SendRequestsBuses(TrCatalogue::DataBase::TransportCatalogue& catalogue) {
+void InputReader::SendRequestsBuses(TrCatalogue::TransportCatalogue& catalogue) {
     for (auto request : buses_) {
-        vector<string> bus;
+        vector<string_view> bus;
         string text = request.data;
         auto it_endname = text.find(':');
         string name = text.substr(0, it_endname);
         auto it_ = ++it_endname;
-        if (text.find('>') != string::npos) {
-            do {
+		
+		do {
                 auto it_beginstop = text.find_first_not_of(' ', it_);
                 auto it_endstop = text.find('>', it_);
                 it_ = ++it_endstop;
@@ -77,26 +77,18 @@ void InputReader::SendRequestsBuses(TrCatalogue::DataBase::TransportCatalogue& c
                 string stop = text.substr(it_beginstop, it_endstop - it_beginstop + 1);
                 bus.push_back(stop);
             } while (it_);
+			
+		bool is_round = false;
+		
+        if (text.find('>') != string::npos) {
+            is_round = true;
         }
-        else {
-            do {
-                auto it_beginstop = text.find_first_not_of(' ', it_);
-                auto it_endstop = text.find('-', it_);
-                it_ = ++it_endstop;
-                it_endstop = text.find_last_not_of(" -", it_endstop);
-                string stop = text.substr(it_beginstop, it_endstop - it_beginstop + 1);
-                bus.push_back(stop);
-            } while (it_);
-            int n = bus.size();
-            for (int i = n - 2; i >= 0; i--) {
-                bus.push_back(bus[i]);
-            }
-        }
-        catalogue.AddBus(name, bus);
+        
+        catalogue.AddBus(name, bus, is_round);
     }
 }
 
-void InputReader::SendDistances(TrCatalogue::DataBase::TransportCatalogue& catalogue) {
+void InputReader::SendDistances(TrCatalogue::TransportCatalogue& catalogue) {
     for (auto& d : distances) {
         catalogue.AddDistance(d.first.first, d.first.second, d.second);
     }

@@ -24,9 +24,9 @@ namespace TrCatalogue {
                 }
             };
             void AddRequest(const std::string& text, std::ostream&);
-            void SendRequestsBuses(TrCatalogue::DataBase::TransportCatalogue& catalogue);
-            void SendRequestsStops(TrCatalogue::DataBase::TransportCatalogue& catalogue);
-            void SendDistances(TrCatalogue::DataBase::TransportCatalogue& catalogue);
+            void SendRequestsBuses(TrCatalogue::TransportCatalogue& catalogue);
+            void SendRequestsStops(TrCatalogue::TransportCatalogue& catalogue);
+            void SendDistances(TrCatalogue::TransportCatalogue& catalogue);
         private:
             std::vector<Request> buses_;
             std::vector<Request> stops_;

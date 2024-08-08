@@ -22,7 +22,7 @@ StatReader::StatRequest StatReader::AddRequest(const string text, std::ostream& 
     }
 }
 
-void StatReader::GetInfoBus(std::string text, TrCatalogue::DataBase::TransportCatalogue& catalogue, ostream& out) {
+void StatReader::GetInfoBus(std::string text, TrCatalogue::TransportCatalogue& catalogue, ostream& out) {
     auto res = catalogue.GetInfoBus(text);
     if (res.stops) {
         out << "Bus " << res.name << ": " << res.stops << " stops on route, " << res.uniq_stops << " unique stops, " << setprecision(6) <<  res.distance << " route length, " << res.curvature << " curvature" << endl;
@@ -32,7 +32,7 @@ void StatReader::GetInfoBus(std::string text, TrCatalogue::DataBase::TransportCa
     }
 }
 
-void StatReader::GetInfoStop(std::string stop, TrCatalogue::DataBase::TransportCatalogue& catalogue, ostream& out) {
+void StatReader::GetInfoStop(std::string stop, TrCatalogue::TransportCatalogue& catalogue, ostream& out) {
     auto res = catalogue.GetInfoStop(stop);
     if (res.name != "") {
         if (res.buses.empty()) {
@@ -51,7 +51,7 @@ void StatReader::GetInfoStop(std::string stop, TrCatalogue::DataBase::TransportC
     }
 }
 
-void StatReader::GetOutPut(TrCatalogue::DataBase::TransportCatalogue& catalogue, ostream& out) {
+void StatReader::GetOutPut(TrCatalogue::TransportCatalogue& catalogue, ostream& out) {
     for (auto request : output) {
         if (request.type == OutRequestType::BUS) {
             GetInfoBus(request.data, catalogue, out);

@@ -23,9 +23,9 @@ namespace TrCatalogue {
 
             };
             StatRequest AddRequest(std::string text, std::ostream&);
-            void GetInfoBus(std::string text, TrCatalogue::DataBase::TransportCatalogue& catalogue, std::ostream& out = std::cout);
-            void GetInfoStop(std::string text, TrCatalogue::DataBase::TransportCatalogue& catalogue, std::ostream& out = std::cout);
-            void GetOutPut(TrCatalogue::DataBase::TransportCatalogue& catalogue, std::ostream& out = std::cout);
+            void GetInfoBus(std::string text, TrCatalogue::TransportCatalogue& catalogue, std::ostream& out = std::cout);
+            void GetInfoStop(std::string text, TrCatalogue::TransportCatalogue& catalogue, std::ostream& out = std::cout);
+            void GetOutPut(TrCatalogue::TransportCatalogue& catalogue, std::ostream& out = std::cout);
 
         private:
             std::vector<StatRequest> output;

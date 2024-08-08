@@ -21,4 +21,6 @@ int main() {
     RequestHandler rq(trt);
     JsonReader jst(std::cin, trt);
     jst.OutPutAnswers(std::cout);
+	int n;
+	std::cin >> n;
 }
